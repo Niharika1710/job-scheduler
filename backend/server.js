@@ -43,17 +43,20 @@ app.post("/jobs", async (req, res) => {
 });
 
 // =======================
-// GET ALL JOBS
+// GET ALL JOBS (DEBUG VERSION)
 // =======================
 app.get("/jobs", async (req, res) => {
   try {
-    const [rows] = await db.query(
-      "SELECT * FROM jobs ORDER BY id DESC"
-    );
-    res.json(rows);
+    const result = await db.query("SELECT * FROM jobs ORDER BY id DESC");
+    console.log("DB result:", result);
+    res.json(result[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
+    console.error("DB ERROR:", err);
+    res.status(500).json({
+      error: err.message,
+      code: err.code,
+      sqlMessage: err.sqlMessage
+    });
   }
 });
 
