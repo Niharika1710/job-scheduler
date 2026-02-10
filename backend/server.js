@@ -47,9 +47,12 @@ app.post("/jobs", async (req, res) => {
 // =======================
 app.get("/jobs", async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM jobs ORDER BY createdAt DESC");
+    const [rows] = await db.query(
+      "SELECT * FROM jobs ORDER BY id DESC"
+    );
     res.json(rows);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
