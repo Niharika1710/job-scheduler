@@ -9,7 +9,7 @@ export default function CreateJob() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    await fetch("http://localhost:5000/jobs", {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
