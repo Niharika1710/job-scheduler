@@ -20,7 +20,7 @@ export default function JobsPage() {
   const [jobs, setJobs] = useState([]);
 
   const fetchJobs = async () => {
-    const res = await fetch("http://localhost:5000/jobs");
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs`);
     const data = await res.json();
     setJobs(data);
   };
@@ -30,7 +30,9 @@ export default function JobsPage() {
   }, []);
 
   const runJob = async (id: number) => {
-    await fetch(`http://localhost:5000/run-job/${id}`, { method: "POST" });
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/run-job/${id}`, {
+  method: "POST",
+});
     alert("Job triggered!");
     fetchJobs(); // refresh list
   };
