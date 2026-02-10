@@ -8,11 +8,7 @@ const db = require("./db");
 const app = express();
 
 // ✅ Allow requests from Next.js frontend
-app.use(cors({
-  origin: "http://localhost:3000",
-  methods: ["GET", "POST"],
-  credentials: true
-}));
+app.use(cors());
 
 app.use(express.json());
 
