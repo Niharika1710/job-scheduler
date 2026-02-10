@@ -5,13 +5,12 @@ const pool = mysql.createPool({
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
   database: process.env.MYSQLDATABASE,
-  port: Number(process.env.MYSQLPORT), // IMPORTANT
+  port: Number(process.env.MYSQLPORT),
   ssl: {
-    rejectUnauthorized: false,          // REQUIRED FOR RAILWAY
+    rejectUnauthorized: false, // REQUIRED for Railway public proxy
   },
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
 });
 
 module.exports = pool;
