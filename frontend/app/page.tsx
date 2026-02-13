@@ -1,7 +1,7 @@
 export default function Home() {
   return (
     <main className="min-h-screen bg-gray-100 p-10">
-      <h1 className="text-3xl font-bold mb-6 text-center">
+      <h1 className="text-3xl font-bold text-black mb-6 text-center">
         Job Scheduler Dashboard
       </h1>
 
