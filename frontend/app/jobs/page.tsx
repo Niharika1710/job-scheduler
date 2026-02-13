@@ -18,6 +18,7 @@ const priorityColor = (priority: string) => {
 
 export default function JobsPage() {
   const [jobs, setJobs] = useState<any[]>([]);
+  const [search, setSearch] = useState("");
 
   const fetchJobs = async () => {
     try {
@@ -31,8 +32,11 @@ export default function JobsPage() {
     }
   };
 
+  // Auto refresh every 3 seconds
   useEffect(() => {
     fetchJobs();
+    const interval = setInterval(fetchJobs, 3000);
+    return () => clearInterval(interval);
   }, []);
 
   const runJob = async (id: number) => {
@@ -40,14 +44,59 @@ export default function JobsPage() {
       `${process.env.NEXT_PUBLIC_API_URL}/run-job/${id}`,
       { method: "POST" }
     );
-    alert("Job triggered!");
     fetchJobs();
   };
 
+  // 🔹 Analytics
+  const totalJobs = jobs.length;
+  const completedJobs = jobs.filter(j => j.status === "completed").length;
+  const pendingJobs = jobs.filter(j => j.status === "pending").length;
+  const runningJobs = jobs.filter(j => j.status === "running").length;
+
+  // 🔹 Search Filter
+  const filteredJobs = jobs.filter(job =>
+    job.taskName.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <main className="min-h-screen bg-black p-10 text-white">
-      <h2 className="text-2xl font-bold mb-6 text-center">All Jobs</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">
+        Job Execution Dashboard
+      </h2>
 
+      {/* 🔍 Search */}
+      <input
+        type="text"
+        placeholder="Search jobs..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="mb-6 p-2 rounded bg-gray-800 text-white w-full"
+      />
+
+      {/* 📊 Analytics Cards */}
+      <div className="grid grid-cols-4 gap-4 mb-6">
+        <div className="bg-gray-800 p-4 rounded text-center">
+          📦 Total Jobs <br />
+          <span className="text-xl font-bold">{totalJobs}</span>
+        </div>
+
+        <div className="bg-yellow-700 p-4 rounded text-center">
+          ⏳ Pending <br />
+          <span className="text-xl font-bold">{pendingJobs}</span>
+        </div>
+
+        <div className="bg-blue-700 p-4 rounded text-center">
+          ⚙️ Running <br />
+          <span className="text-xl font-bold">{runningJobs}</span>
+        </div>
+
+        <div className="bg-green-700 p-4 rounded text-center">
+          ✅ Completed <br />
+          <span className="text-xl font-bold">{completedJobs}</span>
+        </div>
+      </div>
+
+      {/* 📋 Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-black shadow rounded">
           <thead>
@@ -59,16 +108,15 @@ export default function JobsPage() {
             </tr>
           </thead>
 
-          {/* 👇 FIX IS HERE */}
-          <tbody className="text-white">
-            {jobs.length === 0 ? (
+          <tbody>
+            {filteredJobs.length === 0 ? (
               <tr>
                 <td colSpan={4} className="p-6 text-center text-gray-400">
                   No jobs found
                 </td>
               </tr>
             ) : (
-              jobs.map((job) => (
+              filteredJobs.map((job) => (
                 <tr key={job.id} className="border-t border-gray-700">
                   <td className="p-3">
                     <Link
