@@ -1,85 +1,69 @@
 "use client";
-
 import { useState } from "react";
-import { motion } from "framer-motion";
 
 export default function CreateJob() {
   const [taskName, setTaskName] = useState("");
-  const [payload, setPayload] = useState("{}");
-  const [priority, setPriority] = useState("Low");
-  const [loading, setLoading] = useState(false);
+  const [payload, setPayload] = useState("");
+  const [priority, setPriority] = useState("High");
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
-    setLoading(true);
 
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         taskName,
-        payload: JSON.parse(payload),
+        payload: JSON.parse(payload || "{}"),
         priority
       })
     });
 
-    setLoading(false);
-    setTaskName("");
-    setPayload("{}");
+    alert("Job Scheduled Successfully");
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-black to-gray-900 flex items-center justify-center p-10">
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] to-black">
 
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg"
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white text-black p-8 rounded-2xl shadow-2xl w-full max-w-lg"
       >
+        <h2 className="text-2xl font-bold mb-6">Create Job</h2>
 
-        <h2 className="text-3xl font-bold text-center mb-6 text-white">
-          🚀 Create New Job
-        </h2>
+        <input
+          type="text"
+          placeholder="Job Name"
+          value={taskName}
+          onChange={(e)=>setTaskName(e.target.value)}
+          className="w-full border p-3 rounded mb-4"
+        />
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <textarea
+          placeholder="Command or JSON Payload"
+          value={payload}
+          onChange={(e)=>setPayload(e.target.value)}
+          className="w-full border p-3 rounded mb-4"
+        />
 
-          <input
-            type="text"
-            placeholder="Task Name"
-            value={taskName}
-            onChange={(e) => setTaskName(e.target.value)}
-            className="w-full p-3 rounded bg-gray-700 text-white focus:ring-2 focus:ring-blue-500"
-            required
-          />
+        <select
+          value={priority}
+          onChange={(e)=>setPriority(e.target.value)}
+          className="w-full border p-3 rounded mb-6"
+        >
+          <option>High</option>
+          <option>Medium</option>
+          <option>Low</option>
+        </select>
 
-          <textarea
-            placeholder="Payload (JSON)"
-            value={payload}
-            onChange={(e) => setPayload(e.target.value)}
-            className="w-full p-3 rounded bg-gray-700 text-white h-32 focus:ring-2 focus:ring-blue-500"
-          />
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 transition"
+        >
+          Schedule Job →
+        </button>
+      </form>
 
-          <select
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-            className="w-full p-3 rounded bg-gray-700 text-white"
-          >
-            <option>Low</option>
-            <option>Medium</option>
-            <option>High</option>
-          </select>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 p-3 rounded hover:bg-blue-700 transition duration-300 text-white font-semibold"
-          >
-            {loading ? "Creating..." : "Create Job"}
-          </button>
-
-        </form>
-      </motion.div>
     </main>
   );
 }
