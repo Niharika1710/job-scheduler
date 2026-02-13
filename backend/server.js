@@ -45,8 +45,9 @@ app.post("/jobs", async (req, res) => {
 //delete jobs
 app.delete("/jobs/:id", async (req, res) => {
   try {
-    await db.query("DELETE FROM jobs WHERE id = ?", [req.params.id]);
-    res.json({ message: "Job deleted" });
+    const { id } = req.params;
+    await db.query("DELETE FROM jobs WHERE id = ?", [id]);
+    res.json({ message: "Job deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
