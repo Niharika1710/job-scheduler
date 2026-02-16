@@ -19,6 +19,17 @@ app.get("/", (req, res) => {
   res.send("Job Scheduler API Running");
 });
 
+//delete job
+app.delete("/jobs/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await db.query("DELETE FROM jobs WHERE id = ?", [id]);
+    res.json({ message: "Job deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // =======================
 // CREATE JOB
 // =======================

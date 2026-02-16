@@ -47,7 +47,7 @@ export default function Home() {
 
           <Link href="/dashboard">
             <button className="border border-blue-500 px-8 py-3 rounded-xl hover:bg-blue-800 transition">
-              View Demo
+              View Dashboard
             </button>
           </Link>
         </div>
